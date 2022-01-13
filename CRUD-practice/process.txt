@@ -1,0 +1,84 @@
+After startproject, startapp
+
+0. project > settings.py
+* INSTALLED_APPS 에 app name 추가
+* LANGUAGE_CODE = 'ko-KR'
+* TIME_ZONE = 'Asia/Seoul'
+
+1. project > urls.py
+* from django.urls import path, include
+* urlpatterns에 path('app/', include('app.urls')) 등 추가
+* app > urls.py 생성
+
+2. app > models.py
+* class Table(models.Model):
+    field_name = models.CharField(verbose_name="제목", max_length=100)
+
+    def __str__(self):
+        return self.field_name
+cf) app > admin.py
+* from .models import Table
+  admin.site.register(Table)
+
+3. app > urls.py
+* from django.urls import path
+  from . import views
+* app_name ="app"
+* urlpatterns에 path('', views.index, name="index") 등 추가
+
+4. app > views.py
+* from django.shortcuts import render, redirect, get_object_or_404
+  from .models import Table
+  from .forms import FirstForm (사전에 app > forms.py 생성 필요)
+* def index(request):
+    objects = Table.objects.all()
+    ctx = {"objects":objects}
+    return render(request, template_name="index.html", context=objects)
+
+5. app > templates > app > index.html
+* {%for object in objects%}
+    {{object.field_name}}
+  {%endfor%}
+
+
+
+# Retrieve
+* app > views.py
+  Table.objects.all() or Table.objects.filter(field_name="something") 등으로
+  objects 가져온 후 template에 전달
+
+# Create
+* app > forms.py 생성
+  from django import forms
+  from .models import Table
+  class FirstForm(forms.ModelForm):
+      class Meta:
+          model = Table
+          fields = "__all__"
+* app.views.py
+  from .forms import FirstForm
+  if request.method == 'POST':
+    request.POST 이용하여 form object 생성,
+    validity check -> form.save() 후 redirect
+  else: empty form object 생성하여 template에 전달
+* app > templates > app > create.html
+  form object의 형태를 transform 한 후, POST 방식 <form>에 포함시킴
+
+# Read
+* app > urls.py : path('<int:pk>/')
+* app > views.py
+  Table.object.get(id=pk) or get_object_or_404(Table, id=pk) 로
+  url에 입력된 pk와 일치하는 id를 가진 object 가져온 후 template에 전달
+
+# Update
+* app > urls.py : path('<int:pk>/update/')
+* app > views.py
+  if request.method == 'POST':
+    request.POST와 instance keyword argument 이용하여 form object 생성,
+    validity check -> form.save() 후 pk 포함하여 redirect
+  else:
+    instance k.a. 통해 기존 내용 반영된 form object 생성하여 template에 전달
+
+# Delete
+* app > urls.py : path('<int:pk>/delete/')
+* app > views.py : 해당 object.delete() 후 redirect

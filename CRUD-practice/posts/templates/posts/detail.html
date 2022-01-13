@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>포스트 상세 정보</title>
+  </head>
+
+  <body>
+    <h1>{{ post.title }}</h1>
+    <span> {{ post.writer }}</span>
+    <p>{{ post.content | linebreaksbr }}</p>
+    <!-- linebreaksbr = 줄바꿈 있는 부분에 <br /> 붙여줌 -->
+    <p>{{ post.created_at }}</p>
+    <p>{{ post.updated_at }}</p>
+    <a href="{% url 'posts:list' %}">리스트로 돌아가기</a> <br />
+    <a href="{% url 'posts:update' post.id%}">수정하기</a> <br />
+    <!-- url에 post.id 전달 -> pk화 -->
+    <a href="{% url 'posts:delete' post.id%}">삭제하기</a>
+    <!-- app name:url name-->
+  </body>
+</html>
