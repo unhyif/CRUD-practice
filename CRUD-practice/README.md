@@ -155,6 +155,6 @@ def log_out(request): #logout
 urlpatterns = [
     path('', views.main, name="main"),
     path('login/', views.LoginView.as_view(), name="login"),
-    path('logout/', views.log_out, name = "logout")
+    path('logout/', views.log_out, name="logout")
 ]
 ```
