@@ -5,20 +5,19 @@ After startproject, startapp
 0. project > settings.py
 
 - INSTALLED_APPS 에 app name 추가
-- LANGUAGE_CODE = 'ko-KR'
-- TIME_ZONE = 'Asia/Seoul'
+- LANGUAGE_CODE = 'ko-KR', TIME_ZONE = 'Asia/Seoul'
 
 1. project > urls.py
 
 - from django.urls import path, include
-- urlpatterns에 path('app/', include('app.urls')) 등 추가
+  <br>urlpatterns에 path('app/', include('app.urls')) 등 추가
 - app > urls.py 생성
 
 2. app > models.py
 
 ```Python
 class Table(models.Model):
-    field_name = models.CharField(verbose_name="제목", max_length=100)
+    field_name = models.CharField(verbose_name="이름", max_length=100)
 
     def __str__(self):
           return self.field_name
@@ -35,7 +34,7 @@ admin.site.register(Table)
 
 - from django.urls import path
   <br>from . import views
-- app_name ="app"
+- app_name = "app"
 - urlpatterns에 path('', views.index, name="index") 등 추가
 
 4. app > views.py
@@ -52,7 +51,7 @@ from .forms import FirstForm
 def index(request):
   objects = Table.objects.all()
   ctx = {"objects":objects}
-  return render(request, template_name="index.html", context=ctx)
+  return render(request, template_name="app/index.html", context=ctx)
 ```
 
 5. app > templates > app > index.html
@@ -92,7 +91,7 @@ class FirstForm(forms.ModelForm):
     <br>validity check -> form.save() 후 redirect
   - else: empty form object 생성하여 template에 전달
 - app > templates > app > create.html
-  <br> POST 방식 `form`에 포함시킴
+  <br> POST 방식 `form`에 {{form}} 포함시킴
 
 ### Read
 
